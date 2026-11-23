@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>せかいちずマスター</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFF7E8; --ink:#24324A; --sub:#647089; --navy:#1F3A5F; --card:#fff; --line:#EADFC8;
+  --accent:#2BA84A; --accent2:#F08A24; --ok:#1F9D63; --ng:#E0484B; --sky:#D9EEF6;
+  --land:#F4EBD6; --landline:#B8A78A; --other:#CDD2D9;
+  --rA:#F2A541; --rE:#5B8DEF; --rF:#E9B949; --rN:#EE6C4D; --rS:#5DB35A; --rO:#9B72CF;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'M PLUS Rounded 1c',system-ui,-apple-system,'Hiragino Maru Gothic ProN',sans-serif;-webkit-tap-highlight-color:transparent}
+body{min-height:100vh}
+button{font-family:inherit}
+ruby rt{font-weight:700;color:var(--sub)}
+ruby{white-space:nowrap}
+.hidden{display:none!important}
+
+/* ===== header ===== */
+.topbar{position:sticky;top:0;z-index:30;background:var(--navy);color:#fff;display:flex;align-items:center;gap:6px;padding:6px 10px}
+.topbar::after{content:'';position:absolute;left:0;right:0;bottom:-5px;height:5px;
+  background:linear-gradient(90deg,var(--rA) 0 16.66%,var(--rE) 16.66% 33.33%,var(--rF) 33.33% 50%,var(--rN) 50% 66.66%,var(--rS) 66.66% 83.33%,var(--rO) 83.33%)}
+.logo{display:flex;align-items:center;gap:8px;background:none;border:0;color:#fff;font-weight:800;font-size:clamp(14px,4.2vw,17px);cursor:pointer;padding:2px 4px;min-height:44px;white-space:nowrap;min-width:0}
+.logo svg{width:28px;height:28px;display:block}
+.spacer{flex:1}
+.tbtn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:999px;padding:0 12px;min-height:44px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.tbtn[aria-pressed="false"]{opacity:.5;text-decoration:line-through}
+main{max-width:820px;margin:0 auto;padding:22px 14px 48px}
+.screen{display:none}
+.screen.on{display:block;animation:fadein .25s ease-out}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+h2{font-size:22px;margin:4px 0 14px}
+h2 rt{font-size:.45em}
+h3{font-size:16px;margin:22px 0 10px;color:var(--sub)}
+
+/* ===== buttons ===== */
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;border-radius:16px;padding:15px 18px;font-weight:800;font-size:18px;cursor:pointer;color:var(--ink);background:#fff;box-shadow:0 4px 0 var(--line),0 8px 16px rgba(36,50,74,.06);transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.btn.primary{background:var(--accent);color:#fff;box-shadow:0 4px 0 #1d7f36,0 8px 16px rgba(43,168,74,.18)}
+.btn.orange{background:var(--accent2);color:#fff;box-shadow:0 4px 0 #b9600f,0 8px 16px rgba(240,138,36,.18)}
+.btn.navy{background:var(--navy);color:#fff;box-shadow:0 4px 0 #0f2238}
+.btn.ghost{background:transparent;box-shadow:none;border:2px solid var(--line);font-size:15px;padding:11px}
+.btn:disabled{opacity:.45;cursor:default}
+.btn .ic{font-size:22px}
+.btn rt{font-size:.5em;color:inherit;opacity:.85}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
+
+/* ===== title ===== */
+.hero{background:#fff;border-radius:24px;padding:18px 18px 22px;box-shadow:0 10px 30px rgba(36,50,74,.08);text-align:center;position:relative;overflow:hidden}
+.hero svg{width:100%;max-width:300px;height:auto;display:block;margin:0 auto}
+.hero .sub{margin:6px 0 0;color:var(--sub);font-weight:700;font-size:14px}
+.hero h1{margin:4px 0 0;font-size:clamp(30px,8vw,44px);font-weight:800;letter-spacing:.02em;line-height:1.15}
+.menu{display:grid;gap:12px;margin-top:18px}
+.stat{text-align:center;color:var(--sub);font-size:13px;margin-top:16px}
+.cnt{background:var(--ng);color:#fff;border-radius:999px;font-size:13px;padding:1px 8px;margin-left:4px}
+
+/* ===== mode ===== */
+.seg{display:flex;background:#fff;border-radius:14px;padding:4px;gap:4px;box-shadow:0 2px 0 var(--line)}
+.seg button{flex:1;border:0;background:none;border-radius:10px;padding:10px 4px;font-weight:800;font-size:15px;color:var(--sub);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--navy);color:#fff}
+.seg-note{font-size:12.5px;color:var(--sub);margin:8px 2px 0;min-height:1.4em;line-height:1.6}
+.seg-note rt{font-size:.6em}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:2px solid var(--c,#94A3B8);background:#fff;border-radius:999px;padding:5px 12px;min-height:44px;font-size:14px;font-weight:800;cursor:pointer;color:var(--ink)}
+.chip rt{font-size:.5em}
+.chip[aria-pressed="true"]{background:var(--c,#94A3B8);color:#fff}
+.chip[aria-pressed="true"] rt{color:#fff}
+.course-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.course{position:relative;text-align:left;border:0;border-radius:18px;background:#fff;padding:16px 16px 14px 22px;cursor:pointer;box-shadow:0 4px 0 var(--line),0 8px 16px rgba(36,50,74,.05);overflow:hidden;transition:transform .08s;color:var(--ink)}
+.course:active{transform:translateY(3px)}
+.course:disabled{opacity:.4;cursor:default}
+.course::before{content:'';position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--stripe)}
+.course .t{font-size:19px;font-weight:800;display:block}
+.course .t rt{font-size:.5em}
+.course .d{font-size:12.5px;color:var(--sub);display:block;margin-top:4px;line-height:1.7}
+.course .d rt{font-size:.6em}
+.course .best{position:absolute;right:12px;top:12px;font-size:12px;font-weight:800;color:var(--accent2)}
+.course .ic{position:absolute;right:12px;bottom:10px;font-size:26px;opacity:.9}
+
+/* ===== quiz ===== */
+.qhead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.qno{font-weight:800;font-size:15px;white-space:nowrap}
+.pbar{flex:1;height:10px;background:#fff;border-radius:99px;overflow:hidden;box-shadow:inset 0 0 0 2px var(--line)}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#80C241);border-radius:99px;transition:width .3s}
+.qscore{font-weight:800;color:var(--ok);white-space:nowrap}
+.qcard{background:#fff;border-radius:20px;padding:16px;box-shadow:0 8px 20px rgba(36,50,74,.07)}
+.qtag{display:inline-block;font-size:12px;font-weight:800;color:#fff;background:var(--navy);border-radius:8px;padding:3px 9px}
+.qtext{font-size:clamp(18px,4.6vw,22px);font-weight:800;line-height:1.8;margin-top:8px}
+.qtext ruby rt{font-size:.5em}
+.qtext .big{font-size:1.45em;color:var(--navy)}
+.qtext .hint{font-size:14px;color:var(--sub);font-weight:700}
+.qflag{display:block;width:min(70%,260px);aspect-ratio:4/3;margin:12px auto 4px;border-radius:8px;box-shadow:0 0 0 1px rgba(36,50,74,.18),0 6px 14px rgba(36,50,74,.12);background:#eee;object-fit:cover}
+.mflag{width:34px;aspect-ratio:4/3;border-radius:4px;box-shadow:0 0 0 1px rgba(36,50,74,.18);vertical-align:middle;object-fit:cover;background:#eee;flex:none}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.choices.six{grid-template-columns:1fr 1fr}
+.choice{min-height:66px;border:0;border-radius:15px;background:#fff;box-shadow:0 4px 0 var(--line),0 6px 12px rgba(36,50,74,.05);font-weight:800;font-size:clamp(15px,4.2vw,19px);color:var(--ink);cursor:pointer;padding:8px;display:flex;align-items:center;justify-content:center;gap:8px;text-align:center;line-height:1.35;transition:transform .08s}
+.choice:active{transform:translateY(3px)}
+.choice rt{font-size:.55em}
+.choice.flagc{padding:10px}
+.choice.flagc img{width:100%;max-width:150px;aspect-ratio:4/3;border-radius:6px;box-shadow:0 0 0 1px rgba(36,50,74,.18);object-fit:cover;background:#eee}
+.choice .sw{width:14px;height:14px;border-radius:50%;background:var(--c);flex:none}
+.choice.ok{background:var(--ok);color:#fff;box-shadow:0 4px 0 #157a50}
+.choice.ok rt{color:#dffbee}
+.choice.ng{background:var(--ng);color:#fff;box-shadow:0 4px 0 #a52f31}
+.choice.ng rt{color:#ffe3e3}
+.choice.dim{opacity:.45}
+.choice:disabled{cursor:default}
+.tapbar{display:flex;gap:10px;align-items:center;margin-top:12px}
+.tapbar .msg{flex:1;font-size:14px;font-weight:700;color:var(--sub);line-height:1.5}
+.tapbar .msg rt{font-size:.6em}
+.tapbar .btn{width:auto;flex:none;padding:12px 18px;font-size:17px}
+.feedback{margin-top:16px;background:#fff;border-radius:20px;padding:16px;box-shadow:0 8px 20px rgba(36,50,74,.08);border-top:7px solid var(--ok)}
+.feedback.ng{border-top-color:var(--ng)}
+.fb-res{font-size:24px;font-weight:800;color:var(--ok)}
+.feedback.ng .fb-res{color:var(--ng)}
+.fb-exp{margin-top:8px;line-height:1.75}
+.feedback .btn{margin-top:14px}
+
+/* ===== country card ===== */
+.cc{display:flex;gap:12px;align-items:flex-start}
+.cc .fl{width:84px;aspect-ratio:4/3;border-radius:6px;box-shadow:0 0 0 1px rgba(36,50,74,.18),0 4px 10px rgba(36,50,74,.1);object-fit:cover;background:#eee;flex:none}
+.cc .nm{font-size:24px;font-weight:800;line-height:1.35}
+.cc .nm rt{font-size:.45em}
+.cc .fm{font-size:12px;color:var(--sub);font-weight:700;line-height:1.8}
+.cc .fm rt{font-size:.7em}
+.kv{margin-top:8px;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:15px;align-items:baseline}
+.kv dt{white-space:nowrap}
+.kv dt{font-weight:800;color:var(--sub);font-size:13px}
+.kv dd{margin:0;font-weight:700}
+.kv rt{font-size:.55em}
+.rtag{display:inline-block;background:var(--c);color:#fff;border-radius:8px;padding:0 8px;font-size:13px;font-weight:800}
+.rtag rt{color:#fff;font-size:.55em}
+.note{margin-top:8px;background:#FFF4E0;border-radius:10px;padding:8px 10px;font-size:13.5px;line-height:1.75;font-weight:700}
+.note rt{font-size:.6em}
+.nblist{display:flex;flex-wrap:wrap;gap:6px}
+.kv dd{line-height:1.8}
+details.more{margin-top:8px;border-top:1px dashed var(--line);padding-top:6px}
+details.more summary{cursor:pointer;font-weight:800;color:var(--navy);font-size:14px;padding:8px 0;min-height:44px;display:flex;align-items:center}
+details.more summary rt{font-size:.55em}
+.src{font-size:11.5px;color:var(--sub);margin:8px 0 0;line-height:1.8}
+.src rt{font-size:.6em}
+.nw{white-space:nowrap}
+.nblist button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px;min-height:44px;font-size:14px;font-weight:700;cursor:pointer;color:var(--ink)}
+.nblist rt{font-size:.55em}
+
+/* ===== result ===== */
+.rcard{background:#fff;border-radius:24px;padding:24px 18px;text-align:center;box-shadow:0 10px 30px rgba(36,50,74,.08)}
+.stars{font-size:40px;letter-spacing:6px;color:#F5B301}
+.rscore{font-size:46px;font-weight:800;margin-top:4px}
+.rscore small{font-size:20px;color:var(--sub)}
+.rmsg{font-weight:800;font-size:18px;margin-top:6px}
+.rbest{color:var(--accent2);font-weight:800;font-size:14px;margin-top:6px;min-height:1.2em}
+.slist{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.slist li{background:#fff;border-radius:14px;padding:10px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;box-shadow:0 2px 0 var(--line)}
+.slist .nm{font-weight:800;font-size:18px}
+.slist .nm rt{font-size:.5em}
+.slist .sub{font-size:13px;color:var(--sub);font-weight:700}
+.slist .sub rt{font-size:.6em}
+.slist .times{margin-left:auto;font-weight:800;color:var(--ng);font-size:14px}
+.empty{color:var(--sub);text-align:center;padding:18px;background:#fff;border-radius:14px}
+
+/* ===== zukan ===== */
+.zk-info{position:relative;margin-top:10px;background:#fff;border-radius:16px;padding:12px 14px;box-shadow:0 6px 18px rgba(36,50,74,.1);border-left:7px solid var(--c,var(--accent2))}
+.zk-info .x{position:absolute;right:2px;top:2px;width:44px;height:44px;border:0;background:none;font-size:24px;line-height:1;cursor:pointer;color:var(--sub)}
+.zk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin-top:8px}
+.zk-grid button{display:flex;align-items:center;gap:8px;min-height:46px;border:0;background:#fff;border-radius:12px;padding:6px 8px;font-weight:800;font-size:14px;cursor:pointer;text-align:left;color:var(--ink);box-shadow:0 2px 0 var(--line);line-height:1.3}
+.zk-grid button rt{font-size:.55em}
+.zk-grid button[aria-current="true"]{outline:3px solid var(--accent2)}
+.zk-h{font-size:14px;font-weight:800;margin:16px 0 4px;display:flex;align-items:center;gap:8px}
+.zk-h i{width:12px;height:12px;border-radius:50%;background:var(--c)}
+.zk-h rt{font-size:.55em}
+.credit{font-size:11.5px;color:var(--sub);margin-top:24px;line-height:1.7}
+.credit a{color:var(--sub)}
+
+/* ===== map ===== */
+.mapwrap{position:relative;height:min(52vh,440px);min-height:260px;background:var(--sky);border-radius:16px;overflow:hidden;border:2px solid var(--line);margin-top:12px}
+.mapwrap.tall{height:clamp(260px,75vw,min(60vh,540px))}
+.maphost{position:absolute;inset:0;overflow:hidden}
+.mapbtns{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:6px;z-index:2}
+.mapbtns button{width:44px;height:44px;border-radius:10px;border:0;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.15);font-size:19px;font-weight:800;cursor:pointer;color:var(--ink);line-height:1}
+.maphint{position:absolute;left:8px;bottom:8px;right:60px;width:max-content;max-width:calc(100% - 64px);line-height:1.6;font-size:11px;background:rgba(255,255,255,.88);padding:3px 8px;border-radius:8px;color:var(--sub);pointer-events:none;z-index:2}
+.maphint rt{font-size:.6em}
+.toast{word-break:keep-all;position:absolute;left:50%;top:10px;transform:translateX(-50%);background:rgba(31,58,95,.94);color:#fff;font-size:13px;font-weight:700;padding:7px 12px;border-radius:10px;z-index:3;max-width:86%;text-align:center;line-height:1.6;pointer-events:none;transition:opacity .25s}
+.toast rt{font-size:.6em;color:#dbe6f5}
+.wmap{position:absolute;left:0;top:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none;transform-origin:0 0}
+.wmap:active{cursor:grabbing}
+.wmap .c{fill:var(--land);stroke:var(--landline);stroke-linejoin:round}
+.wmap .o{fill:var(--other);stroke:#A9B0BA;stroke-linejoin:round}
+.wmap .dz{fill:url(#hatch);stroke:#8B94A0;stroke-dasharray:3 2}
+.wmap .c.dim{fill:#EDE7DA;stroke:#D3C9B6}
+.wmap.zukan .c.rA{fill:#F9D9A6}.wmap.zukan .c.rE{fill:#C4D6FA}.wmap.zukan .c.rF{fill:#F5E2A6}
+.wmap.zukan .c.rN{fill:#F8C3B4}.wmap.zukan .c.rS{fill:#C3E6BE}.wmap.zukan .c.rO{fill:#DCCBF0}
+.wmap.zukan .c.dim{fill:#EFEAE0}
+.wmap .c.hi{fill:var(--accent2)!important;stroke:#B4570B}
+.wmap .c.sel{fill:#FFB347!important;stroke:#B4570B}
+.wmap .c.ok{fill:var(--ok)!important;stroke:#136B43}
+.wmap .c.ng{fill:var(--ng)!important;stroke:#9A2224}
+.wmap .c.alt{fill:#A9C8EC!important;stroke:#3F6A9A}
+.wmap .c.peek{fill:#FFE08A!important;stroke:#B4570B}
+.wmap .mk{fill:#fff;stroke:#7D6E55}
+.wmap .mk.hi,.wmap .mk.sel{fill:var(--accent2);stroke:#fff}
+.wmap .mk.ok{fill:var(--ok);stroke:#fff}
+.wmap .mk.ng{fill:var(--ng);stroke:#fff}
+.wmap .mk.alt{fill:#5B8DEF;stroke:#fff}
+.wmap .mk.peek{fill:#FFC233;stroke:#fff}
+.wmap .mk.dim{opacity:.35}
+.wmap .mkhit{fill:transparent;stroke:none}
+.wmap .ring{fill:none;stroke:var(--accent2);animation:pulse 1.1s ease-in-out infinite;pointer-events:none}
+.wmap .ring.ok{stroke:var(--ok);animation:none}
+.wmap .ring.ng{stroke:var(--ng);animation:none}
+.wmap text{font-weight:800;fill:#24324A;paint-order:stroke;stroke:#fff;stroke-linejoin:round;pointer-events:none;text-anchor:middle}
+.wmap text.ok{fill:#136B43}.wmap text.ng{fill:#9A2224}.wmap text.alt{fill:#2F5684}.wmap text.peek{fill:#8A4A06}.wmap text.sm{font-weight:700;fill:#4B5568}.wmap text.rt{font-weight:700}
+.wmap g.ov{pointer-events:none}
+@keyframes pulse{0%,100%{stroke-opacity:1}50%{stroke-opacity:.15}}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(20,30,45,.45);display:grid;place-items:center;z-index:50;padding:16px}
+.modal .box{background:#fff;border-radius:20px;padding:20px;max-width:360px;width:100%;text-align:center;font-weight:700}
+.modal .row{margin-top:16px}
+@media (max-width:420px){
+  main{padding:16px 10px 40px}
+  .choices{gap:8px}
+  .choice{min-height:60px}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <button class="logo" id="btn-home" aria-label="タイトルへ"><svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="12" fill="#5DB0D9" stroke="#fff" stroke-width="2.5"/><path d="M8 9c3-2 5 1 7 0s3 2 2 4-4 1-5 3-3 2-4 0 1-3-1-4-1-2 1-3z M17 17c2-1 4 0 4 2s-2 3-3 2-2-3-1-4z" fill="#8FD07A"/></svg>せかいちずマスター</button>
+  <span class="spacer"></span>
+  <button class="tbtn" id="tg-furi" aria-pressed="true">ふりがな</button>
+  <button class="tbtn" id="tg-sound" aria-pressed="true">おと</button>
+</header>
+<main>
+  <!-- タイトル -->
+  <section class="screen on" id="scr-title">
+    <div class="hero">
+      <svg id="hero-svg" viewBox="0 0 300 210" aria-hidden="true"></svg>
+      <p class="sub" id="hero-sub"></p>
+      <h1>せかいちずマスター</h1>
+    </div>
+    <div class="menu">
+      <button class="btn primary" id="btn-play"><span class="ic">🌏</span>クイズであそぶ</button>
+      <button class="btn orange" id="btn-zukan"><span class="ic">📖</span><span id="lb-zukan"></span></button>
+      <button class="btn" id="btn-weak"><span class="ic">📝</span>にがてリスト<span class="cnt hidden" id="weak-cnt">0</span></button>
+    </div>
+    <p class="stat" id="stat"></p>
+  </section>
+
+  <!-- モード -->
+  <section class="screen" id="scr-mode">
+    <h2>むずかしさ</h2>
+    <div class="seg" id="seg-diff">
+      <button data-d="1" aria-pressed="false">かんたん</button>
+      <button data-d="2" aria-pressed="true">ふつう</button>
+      <button data-d="3" aria-pressed="false">むずかしい</button>
+    </div>
+    <p class="seg-note" id="diff-note"></p>
+    <h2 style="margin-top:20px" id="h-area"></h2>
+    <div class="chips" id="area-chips"></div>
+    <h2 style="margin-top:22px" id="h-mode"></h2>
+    <div class="course-grid" id="mode-grid"></div>
+  </section>
+
+  <!-- クイズ -->
+  <section class="screen" id="scr-quiz">
+    <div class="qhead">
+      <span class="qno" id="q-no">1 / 10</span>
+      <div class="pbar"><i id="q-bar"></i></div>
+      <span class="qscore" id="q-score">⭕ 0</span>
+    </div>
+    <div class="qcard">
+      <span class="qtag" id="q-tag"></span>
+      <div class="qtext" id="q-text"></div>
+      <div id="q-body"></div>
+      <div id="q-mapslot"></div>
+      <div class="tapbar hidden" id="q-tapbar"><span class="msg" id="q-tapmsg"></span><button class="btn orange" id="btn-tapok" disabled>ここにする！</button></div>
+    </div>
+    <div class="choices" id="q-choices"></div>
+    <div class="feedback hidden" id="q-fb">
+      <div class="fb-res" id="fb-res"></div>
+      <div class="fb-exp" id="fb-exp"></div>
+      <div id="fb-mapslot"></div>
+      <button class="btn navy" id="btn-next">つぎへ ▶</button>
+    </div>
+  </section>
+
+  <!-- 結果 -->
+  <section class="screen" id="scr-result">
+    <div class="rcard">
+      <div class="stars" id="r-stars"></div>
+      <div class="rscore" id="r-score"></div>
+      <div class="rmsg" id="r-msg"></div>
+      <div class="rbest" id="r-best"></div>
+    </div>
+    <h3 id="r-wrong-h"></h3>
+    <ul class="slist" id="r-wrong"></ul>
+    <div class="menu">
+      <button class="btn primary" id="btn-retry">もういちど</button>
+      <div class="row">
+        <button class="btn" id="btn-mode2">モードをかえる</button>
+        <button class="btn" id="btn-title2">タイトルへ</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ずかん -->
+  <section class="screen" id="scr-zukan">
+    <h2 id="h-zukan"></h2>
+    <div id="z-mapslot"></div>
+    <div class="zk-info hidden" id="z-info"></div>
+    <h3 id="h-zarea"></h3>
+    <div class="chips" id="z-chips"></div>
+    <div id="z-list"></div>
+    <p class="credit" id="credit"></p>
+  </section>
+
+  <!-- にがて -->
+  <section class="screen" id="scr-weak">
+    <h2>にがてリスト</h2>
+    <p style="color:var(--sub);font-size:14px;margin-top:-6px;line-height:1.7" id="weak-desc"></p>
+    <div class="row" style="margin:12px 0 16px">
+      <button class="btn primary" id="btn-weak-play">ふくしゅうする</button>
+      <button class="btn ghost" id="btn-weak-clear">リストをけす</button>
+    </div>
+    <ul class="slist" id="weak-list"></ul>
+  </section>
+</main>
+
+<!-- 地図（1つを、いま見ている画面に動かして使う） -->
+<div class="mapwrap hidden" id="mapwrap">
+  <div class="maphost" id="maphost"></div>
+  <div class="mapbtns"><button data-z="in" aria-label="ズームイン">＋</button><button data-z="out" aria-label="ズームアウト">−</button><button data-z="reset" aria-label="もとにもどす">◎</button></div>
+  <span class="maphint" id="maphint">ドラッグでうごかす・つまんでズーム</span>
+  <div class="toast hidden" id="toast"></div>
+</div>
+
+<script id="world-data" type="application/json">/*__WORLD_DATA__*/</script>
+<script>
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const rnd = n => Math.floor(Math.random() * n);
+const shuffle = a => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = rnd(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+/* ---------- data ---------- */
+const DATA = JSON.parse($('#world-data').textContent);
+const W = DATA.W, H = DATA.H;
+const CS = DATA.countries, RG = DATA.regions, DZ = DATA.disputed;
+const C = Object.fromEntries(CS.map(c => [c.id, c]));
+CS.forEach(c => {
+  c.noReg = c.x.includes('x'); c.noCap = c.x.includes('c') || !c.c;
+  c.notes = {};
+  if (c.m) c.m.split('；').forEach(e => { const [k, v] = e.split('|'); c.notes[k || 'etc'] = v; });
+  c.nb = c.nb.filter(i => C[i]);
+});
+const AREAS = [
+  { k: 'A', n: 'アジア州[しゅう]', c: 'var(--rA)' }, { k: 'E', n: 'ヨーロッパ州[しゅう]', c: 'var(--rE)' },
+  { k: 'F', n: 'アフリカ州[しゅう]', c: 'var(--rF)' }, { k: 'N', n: '北[きた]アメリカ州[しゅう]', c: 'var(--rN)' },
+  { k: 'S', n: '南[みなみ]アメリカ州[しゅう]', c: 'var(--rS)' }, { k: 'O', n: 'オセアニア州[しゅう]', c: 'var(--rO)' },
+];
+const AR = Object.fromEntries(AREAS.map(a => [a.k, a]));
+const flagSim = new Map();
+const flagSame = new Map();
+(DATA.flagSame || []).forEach(g => g.forEach(a => flagSame.set(a, new Set(g.filter(b => b !== a)))));
+DATA.flagGroups.forEach(g => g.forEach(a => { if (!flagSim.has(a)) flagSim.set(a, new Set()); g.forEach(b => b !== a && flagSim.get(a).add(b)); }));
+// 州ごとに地図で見せる範囲（ロシアは大きすぎるので入れない）
+const AREA_BOX = {};
+AREAS.forEach(a => {
+  const bs = CS.filter(c => c.r === a.k && c.id !== 'RU').map(c => c.b);
+  AREA_BOX[a.k] = [Math.min(...bs.map(b => b[0])), Math.min(...bs.map(b => b[1])), Math.max(...bs.map(b => b[2])), Math.max(...bs.map(b => b[3]))];
+});
+const TINY = CS.filter(c => c.a < 40);
+const ldist = (a, b) => Math.hypot(a.l[0] - b.l[0], a.l[1] - b.l[1]);
+
+/* ---------- storage / settings ---------- */
+const store = {
+  key: 'sekai-chizu-v1',
+  d: { furi: true, sound: true, diff: 2, area: 'all', weak: {}, best: {} },
+  load() { try { const v = JSON.parse(localStorage.getItem(this.key) || 'null'); if (v) Object.assign(this.d, v); } catch (e) { } },
+  save() { try { localStorage.setItem(this.key, JSON.stringify(this.d)); } catch (e) { } },
+};
+store.load();
+const weakList = () => Object.entries(store.d.weak).filter(([k, v]) => v > 0 && C[k]).map(([k, v]) => ({ c: C[k], n: v })).sort((a, b) => b.n - a.n);
+
+/* ---------- sound ---------- */
+let actx = null;
+function beep(kind) {
+  if (!store.d.sound) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const t = actx.currentTime;
+    const notes = kind === 'ok' ? [[784, 0], [1047, .1]] : kind === 'ng' ? [[262, 0], [196, .13]] : kind === 'fan' ? [[523, 0], [659, .12], [784, .24], [1047, .36]] : [[880, 0]];
+    notes.forEach(([f, dt]) => {
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = kind === 'ng' ? 'square' : 'triangle'; o.frequency.value = f;
+      const peak = kind === 'ng' ? .06 : kind === 'tap' ? .05 : .16;
+      g.gain.setValueAtTime(.0001, t + dt); g.gain.exponentialRampToValueAtTime(peak, t + dt + .02);
+      g.gain.exponentialRampToValueAtTime(.0001, t + dt + .24);
+      o.connect(g).connect(actx.destination); o.start(t + dt); o.stop(t + dt + .26);
+    });
+  } catch (e) { }
+}
+
+/* ---------- html helpers ---------- */
+const RUBY = /([一-鿿々]+)\[([^\]]+)\]/g;
+const plain = s => s.replace(RUBY, '$1');
+// 「中国[ちゅうごく]」→ [[ふりがなを付ける字の位置, 字数, かな], ...]（位置はふりがなを外した名前の中で数える）
+function rubySegs(s) {
+  const out = []; let pos = 0, last = 0;
+  for (const m of s.matchAll(RUBY)) { pos += m.index - last; out.push([pos, m[1].length, m[2]]); pos += m[1].length; last = m.index + m[0].length; }
+  return out;
+}
+const yomi = c => c.n.replace(RUBY, '$2');
+const R = s => store.d.furi ? esc(s).replace(RUBY, '<ruby>$1<rt>$2</rt></ruby>') : esc(plain(s));
+const flagSrc = c => `flags/${c.id.toLowerCase()}.svg`;
+const flagImg = (c, cls = 'mflag') => `<img class="${cls}" src="${flagSrc(c)}" alt="${esc(plain(c.n))}の国旗" loading="lazy" draggable="false">`;
+const areaTag = k => `<span class="rtag" style="--c:${AR[k].c}">${R(AR[k].n)}</span>`;
+function areaText(c) {
+  if (c.id === 'RU') return `${areaTag('E')} と ${areaTag('A')} に またがる`;
+  if (c.noReg) return `${areaTag(c.r)} ${R('（本[ほん]によって ちがうよ）')}`;
+  return areaTag(c.r);
+}
+function countryCard(c, opt = {}) {
+  const kv = [];
+  kv.push(`<dt>${R('首都[しゅと]')}</dt><dd>${c.c ? R(c.c) : 'なし'}</dd>`);
+  kv.push(`<dt>${R('州[しゅう]')}</dt><dd>${areaText(c)}</dd>`);
+  const INFO_L = { a: '面積[めんせき]', p: '人口[じんこう]', e: 'おもな 民族[みんぞく]', l: '言語[げんご]', d: 'おもな 産業[さんぎょう]', x: '独立[どくりつ]' };
+  // 人口に年が書いていない国は、外務省のページの日付を横に出す（何年の数字か分かるように）
+  const pg = c.i.s && c.i.s.match(/R(\d+)\.(\d+)\./);
+  const val = k => k === 'p' && pg && c.id !== 'JP' && !/\d{4}/.test(plain(c.i.p)) ? R(c.i.p) + `（${R('外務省[がいむしょう]の ページは')} <span class="nw">${R(`${2018 + +pg[1]}年[ねん]${pg[2]}月[がつ]`)}</span>）` : R(c.i[k]);
+  const rows = ks => ks.filter(k => c.i[k]).map(k => `<dt>${R(INFO_L[k])}</dt><dd>${val(k)}</dd>`).join('');
+  if (opt.info) kv.push(rows(['a', 'p']));
+  if (opt.nb && c.nb.length) kv.push(`<dt>${R('となりの国[くに]')}</dt><dd class="nblist">${c.nb.map(i => `<button data-go="${i}">${R(C[i].n)}</button>`).join('')}</dd>`);
+  const notes = (opt.notes || ['首都', '州', 'etc']).filter(k => c.notes[k]).map(k => `<div class="note">💡 ${R(c.notes[k])}</div>`).join('');
+  let more = '';
+  if (opt.info) {
+    const rest = rows(['e', 'l', 'd', 'x']);
+    const m = pg;
+    const src = c.id === 'JP' ? R('出典[しゅってん]：国土地理院[こくどちりいん]「全国都道府県市区町村別面積調[ぜんこくとどうふけんしくちょうそんべつめんせきしらべ]」、総務省[そうむしょう]統計局[とうけいきょく]「人口推計[じんこうすいけい]」')
+      : R(`出典[しゅってん]：外務省[がいむしょう]「${plain(c.n)}」の 基礎[きそ]データ`) + (m ? R(`（令和[れいわ]${m[1]}年[ねん]${m[2]}月[がつ]の ページ）`) : '');
+    const body = (rest ? `<dl class="kv">${rest}</dl>` : '') + `<p class="src">${src}</p>`;
+    more = opt.info === 'full' ? body : `<details class="more"><summary>${R('もっと くわしく')}</summary>${body}</details>`;
+  }
+  return `<div class="cc">${flagImg(c, 'fl')}<div><div class="nm">${R(c.n)}</div><div class="fm">${R(c.f)}</div></div></div><dl class="kv">${kv.join('')}</dl>${more}${notes}`;
+}
+
+/* ---------- map ---------- */
+const SVGNS = 'http://www.w3.org/2000/svg';
+function sv(tag, attrs, parent) { const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+const clampW = w => Math.max(14, Math.min(W * 1.05, w));
+class WorldMap {
+  constructor(host) {
+    this.host = host; this.onTap = null;
+    const svg = this.svg = sv('svg', { class: 'wmap' }); host.appendChild(svg);
+    const defs = sv('defs', {}, svg);
+    const pat = sv('pattern', { id: 'hatch', width: 6, height: 6, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' }, defs);
+    sv('rect', { width: 6, height: 6, fill: '#E6E1D6' }, pat); sv('rect', { width: 2.4, height: 6, fill: '#A7AFBA' }, pat);
+    this.pat = pat;
+    this.gO = sv('g', {}, svg); this.gC = sv('g', {}, svg); this.gD = sv('g', {}, svg);
+    this.gM = sv('g', {}, svg); this.gR = sv('g', { class: 'ov' }, svg); this.gT = sv('g', { class: 'ov' }, svg);
+    this.rEls = RG.map((r, i) => sv('path', { d: r.d, class: 'o', 'data-r': i }, this.gO));
+    this.cEls = {};
+    CS.forEach(c => { this.cEls[c.id] = sv('path', { d: c.d, class: 'c r' + c.r, 'data-c': c.id }, this.gC); });
+    this.dEls = DZ.map((d, i) => sv('path', { d: d.d, class: 'dz', 'data-d': i }, this.gD));
+    this.view = { cx: W / 2, cy: H / 2, w: W }; this.cv = { ...this.view }; this.home = { ...this.view };
+    this.state = {}; this.dim = null; this.rings = []; this.labels = 'none'; this.labelSet = new Set(); this.labelCls = {};
+    this.pxW = 1; this.pxH = 1;
+    new ResizeObserver(() => { this.measure(); this.commit(); }).observe(host);
+    this.bind();
+    const wrap = host.parentElement;
+    $$('.mapbtns button', wrap).forEach(b => b.addEventListener('click', () => {
+      const z = b.dataset.z; beep('tap');
+      if (z === 'in') this.zoomAt(this.pxW / 2, this.pxH / 2, 1 / 1.7, true);
+      else if (z === 'out') this.zoomAt(this.pxW / 2, this.pxH / 2, 1.7, true);
+      else this.flyTo(this.home.cx, this.home.cy, this.home.w);
+    }));
+  }
+  measure() { this.pxW = this.host.clientWidth || 1; this.pxH = this.host.clientHeight || 1; }
+  setMode(m) { this.svg.classList.toggle('zukan', m === 'zukan'); }
+  reset() {
+    for (const id in this.state) this.cEls[id].classList.remove(this.state[id]);
+    this.state = {}; this.rings = []; this.labelSet = new Set(); this.labelCls = {}; this.setDim(null);
+  }
+  mark(id, cls) {
+    if (this.state[id]) this.cEls[id].classList.remove(this.state[id]);
+    if (cls) { this.state[id] = cls; this.cEls[id].classList.add(cls); this.gC.appendChild(this.cEls[id]); }
+    else delete this.state[id];
+  }
+  setDim(fn) {
+    this.dim = fn;
+    CS.forEach(c => this.cEls[c.id].classList.toggle('dim', !!fn && !fn(c)));
+  }
+  // ---- view ----
+  worldBox() { return this.boxView([0, 0, W, H], 0); }
+  boxView(b, pad = .2, minW = 60) {
+    this.measure();
+    const asp = this.pxW / this.pxH;
+    let w = Math.max(b[2] - b[0], (b[3] - b[1]) * asp, minW) * (1 + pad * 2);
+    return { cx: (b[0] + b[2]) / 2, cy: (b[1] + b[3]) / 2, w: clampW(w) };
+  }
+  setView(v, asHome = true) { this.cancelAnim(); this.view = { ...v }; this.clampView(); if (asHome) this.home = { ...this.view }; this.commit(); }
+  fly(v, asHome = true) { if (asHome) this.home = { ...v }; this.flyTo(v.cx, v.cy, v.w); }
+  clampView() {
+    const v = this.view; v.w = clampW(v.w);
+    v.cx = Math.max(0, Math.min(W, v.cx)); v.cy = Math.max(0, Math.min(H, v.cy));
+  }
+  k() { return this.view.w / this.pxW; }
+  toWorld(px, py) { const k = this.k(); return [this.view.cx + (px - this.pxW / 2) * k, this.view.cy + (py - this.pxH / 2) * k]; }
+  // 動かしている間は CSS の transform だけで動かし、止まったら描きなおす（スマホで軽くするため）
+  preview() {
+    this.clampView();
+    const a = this.cv, b = this.view, ka = a.w / this.pxW, kb = b.w / this.pxW;
+    const ax = a.cx - a.w / 2, ay = a.cy - ka * this.pxH / 2, bx = b.cx - b.w / 2, by = b.cy - kb * this.pxH / 2;
+    this.svg.style.transform = `translate(${((ax - bx) / kb).toFixed(2)}px,${((ay - by) / kb).toFixed(2)}px) scale(${(ka / kb).toFixed(5)})`;
+    clearTimeout(this._ct); this._ct = setTimeout(() => this.commit(), 160);
+  }
+  commit() {
+    clearTimeout(this._ct);
+    this.measure(); this.clampView();
+    const v = this.view, k = this.k(), h = this.pxH * k;
+    this.svg.style.transform = '';
+    this.svg.setAttribute('viewBox', `${(v.cx - v.w / 2).toFixed(3)} ${(v.cy - h / 2).toFixed(3)} ${v.w.toFixed(3)} ${h.toFixed(3)}`);
+    this.cv = { ...v };
+    const sw = (0.9 * k).toFixed(4);
+    this.gC.setAttribute('stroke-width', sw); this.gO.setAttribute('stroke-width', sw); this.gD.setAttribute('stroke-width', sw);
+    const ps = Math.max(2, 6 * k); this.pat.setAttribute('width', ps); this.pat.setAttribute('height', ps);
+    this.pat.children[0].setAttribute('width', ps); this.pat.children[0].setAttribute('height', ps);
+    this.pat.children[1].setAttribute('width', ps * .4); this.pat.children[1].setAttribute('height', ps);
+    this.drawMarkers(); this.drawRings(); this.drawLabels();
+  }
+  drawMarkers() {
+    this.gM.textContent = ''; const k = this.k();
+    for (const c of TINY) {
+      const st = this.state[c.id];
+      const small = Math.sqrt(c.a) / k < 9;
+      if (!small) continue;
+      const cls = 'mk' + (st ? ' ' + st : '') + (this.dim && !this.dim(c) ? ' dim' : '');
+      sv('circle', { cx: c.l[0], cy: c.l[1], r: (st ? 7 : 5) * k, class: cls, 'stroke-width': 1.6 * k }, this.gM);
+      sv('circle', { cx: c.l[0], cy: c.l[1], r: 13 * k, class: 'mkhit', 'data-c': c.id }, this.gM);
+    }
+  }
+  drawRings() {
+    this.gR.textContent = ''; const k = this.k();
+    for (const r of this.rings) {
+      const c = C[r.id], b = c.b;
+      const rad = Math.max(18 * k, Math.hypot(b[2] - b[0], b[3] - b[1]) / 2 + 8 * k);
+      const cx = rad > 18 * k ? (b[0] + b[2]) / 2 : c.l[0], cy = rad > 18 * k ? (b[1] + b[3]) / 2 : c.l[1];
+      if (rad / k > Math.max(this.pxW, this.pxH) * .45) continue;
+      sv('circle', { cx, cy, r: rad, class: 'ring' + (r.cls ? ' ' + r.cls : ''), 'stroke-width': 3.5 * k }, this.gR);
+    }
+  }
+  drawLabels() {
+    this.gT.textContent = ''; const k = this.k(), v = this.view;
+    if (this.labels === 'none' && !this.labelSet.size) return;
+    const x0 = v.cx - v.w / 2, y0 = v.cy - this.pxH * k / 2;
+    const fs = 12, placed = [];
+    const hit = b => placed.some(p => !(b[2] < p[0] || b[0] > p[2] || b[3] < p[1] || b[1] > p[3]));
+    let list = [...this.labelSet].map(id => ({ c: C[id], force: true }));
+    if (this.labels === 'auto') {
+      CS.filter(c => !this.labelSet.has(c.id) && !(this.dim && !this.dim(c))).sort((a, b) => b.a - a.a).forEach(c => list.push({ c, force: false }));
+    }
+    for (const { c, force } of list) {
+      const name = plain(c.n), px = (c.l[0] - x0) / k, py = (c.l[1] - y0) / k;
+      if (px < -60 || py < -20 || px > this.pxW + 60 || py > this.pxH + 20) continue;
+      const rb = store.d.furi ? rubySegs(c.n) : [];
+      const tw = name.length * fs + 4, th = fs + 4 + (rb.length ? fs * .6 : 0);
+      const bw = (c.b[2] - c.b[0]) / k, bh = (c.b[3] - c.b[1]) / k;
+      if (!force && (bw < tw * .7 || bh < th)) continue;
+      const tiny = Math.sqrt(c.a) / k < 9;
+      const oy = force && tiny ? -14 : 0;
+      const box = [px - tw / 2, py + oy - th / 2 - (rb.length ? fs * .3 : 0), px + tw / 2, py + oy + th / 2 - (rb.length ? fs * .3 : 0)];
+      if (!force && hit(box)) continue;
+      placed.push(box);
+      const t = sv('text', { x: c.l[0], y: c.l[1] + (oy + fs * .38) * k, 'font-size': fs * k, 'stroke-width': 3.2 * k, class: (this.labelCls[c.id] || '') + (force ? '' : ' sm') }, this.gT);
+      t.textContent = name;
+      // ふりがな：地図の字は全角でほぼ1文字=1em なので、漢字の上のまんなかに小さく置く
+      const rfs = fs * .5, cls = (this.labelCls[c.id] || '') + (force ? '' : ' sm') + ' rt';
+      for (const [i, n, kana] of rb) {
+        const rx = c.l[0] + (i + n / 2 - name.length / 2) * fs * k;
+        const r = sv('text', { x: rx, y: c.l[1] + (oy + fs * .38 - fs * .98) * k, 'font-size': rfs * k, 'stroke-width': 2.2 * k, class: cls }, this.gT);
+        r.textContent = kana;
+      }
+    }
+  }
+  schedulePreview() { if (this._raf) return; this._raf = requestAnimationFrame(() => { this._raf = null; this.preview(); }); }
+  cancelAnim() { if (this._anim) { cancelAnimationFrame(this._anim); this._anim = null; } }
+  flyTo(cx, cy, w, ms = 450) {
+    this.cancelAnim(); this.measure();
+    const a = { ...this.view }, b = { cx, cy, w: clampW(w) }, t0 = performance.now();
+    const step = now => {
+      const p = Math.min(1, (now - t0) / ms), e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+      this.view = { cx: a.cx + (b.cx - a.cx) * e, cy: a.cy + (b.cy - a.cy) * e, w: Math.exp(Math.log(a.w) + (Math.log(b.w) - Math.log(a.w)) * e) };
+      if (p < 1) { this.preview(); this._anim = requestAnimationFrame(step); } else { this._anim = null; this.commit(); }
+    };
+    this._anim = requestAnimationFrame(step);
+  }
+  zoomAt(px, py, f, anim) {
+    const [wx, wy] = this.toWorld(px, py), nw = clampW(this.view.w * f), k1 = nw / this.pxW;
+    const cx = wx - (px - this.pxW / 2) * k1, cy = wy - (py - this.pxH / 2) * k1;
+    if (anim) this.flyTo(cx, cy, nw, 240); else { this.cancelAnim(); this.view = { cx, cy, w: nw }; this.schedulePreview(); }
+  }
+  hitTest(clientX, clientY) {
+    const el = document.elementFromPoint(clientX, clientY);
+    if (el && el.dataset) {
+      if (el.dataset.c) return { kind: 'c', c: C[el.dataset.c] };
+      if (el.dataset.d) return { kind: 'd', d: DZ[+el.dataset.d] };
+      if (el.dataset.r) return { kind: 'r', r: RG[+el.dataset.r] };
+    }
+    // 海をタップしたときは、近くの小さい国をさがす
+    const r = this.host.getBoundingClientRect(), [wx, wy] = this.toWorld(clientX - r.left, clientY - r.top), k = this.k();
+    let best = null, bd = 20 * k;
+    for (const c of TINY) { const d = Math.hypot(c.l[0] - wx, c.l[1] - wy); if (d < bd) { bd = d; best = c; } }
+    return best ? { kind: 'c', c: best } : { kind: 'sea' };
+  }
+  bind() {
+    const el = this.svg, pts = new Map(); let start = null, moved = false, pinch = null;
+    const rect = () => this.host.getBoundingClientRect();
+    el.addEventListener('pointerdown', e => {
+      try { el.setPointerCapture(e.pointerId); } catch (_) { }
+      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pts.size === 1) { moved = false; start = { x: e.clientX, y: e.clientY, cx: this.view.cx, cy: this.view.cy }; }
+      if (pts.size === 2) {
+        const [a, b] = [...pts.values()], r = rect();
+        pinch = { d: Math.hypot(a.x - b.x, a.y - b.y) || 1, w: this.view.w, world: this.toWorld((a.x + b.x) / 2 - r.left, (a.y + b.y) / 2 - r.top) };
+        moved = true;
+      }
+    });
+    el.addEventListener('pointermove', e => {
+      if (!pts.has(e.pointerId)) return;
+      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pts.size === 1 && start) {
+        const dx = e.clientX - start.x, dy = e.clientY - start.y;
+        if (!moved && Math.hypot(dx, dy) > 8) moved = true;
+        if (moved) { this.cancelAnim(); const k = this.k(); this.view.cx = start.cx - dx * k; this.view.cy = start.cy - dy * k; this.schedulePreview(); }
+      } else if (pts.size === 2 && pinch) {
+        const [a, b] = [...pts.values()], r = rect();
+        const nw = clampW(pinch.w * pinch.d / (Math.hypot(a.x - b.x, a.y - b.y) || 1)), k1 = nw / this.pxW;
+        const mx = (a.x + b.x) / 2 - r.left, my = (a.y + b.y) / 2 - r.top;
+        this.cancelAnim();
+        this.view = { w: nw, cx: pinch.world[0] - (mx - this.pxW / 2) * k1, cy: pinch.world[1] - (my - this.pxH / 2) * k1 };
+        this.schedulePreview();
+      }
+    });
+    const up = e => {
+      if (!pts.has(e.pointerId)) return;
+      pts.delete(e.pointerId);
+      if (pts.size === 0) {
+        if (!moved && this.onTap && e.type === 'pointerup') {
+          if (this.svg.style.transform) this.commit();
+          this.onTap(this.hitTest(e.clientX, e.clientY));
+        }
+        start = null; pinch = null;
+      } else if (pts.size === 1) { const [a] = [...pts.values()]; start = { x: a.x, y: a.y, cx: this.view.cx, cy: this.view.cy }; pinch = null; }
+    };
+    el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+    el.addEventListener('wheel', e => { e.preventDefault(); const r = rect(); this.zoomAt(e.clientX - r.left, e.clientY - r.top, Math.exp(Math.max(-60, Math.min(60, e.deltaY)) * .006)); }, { passive: false });
+  }
+}
+let map = null;
+function placeMap(slot, opt = {}) {
+  const wrap = $('#mapwrap');
+  if (!map) { wrap.classList.remove('hidden'); slot.appendChild(wrap); map = new WorldMap($('#maphost')); }
+  else if (wrap.parentElement !== slot) slot.appendChild(wrap);
+  wrap.classList.remove('hidden');
+  wrap.classList.toggle('tall', !!opt.tall);
+  $('#maphint').innerHTML = opt.hintHtml || (opt.hint ? R(opt.hint) : '');
+  $('#maphint').classList.toggle('hidden', !opt.hint && !opt.hintHtml);
+  hideToast();
+  map.setMode(opt.mode || 'quiz'); map.reset(); map.labels = opt.labels || 'none'; map.onTap = opt.onTap || null;
+  map.measure();
+  return map;
+}
+function hideMap() { const w = $('#mapwrap'); w.classList.add('hidden'); document.body.appendChild(w); }
+let toastT = null;
+function toast(html) {
+  const t = $('#toast'); t.innerHTML = html; t.classList.remove('hidden'); t.style.opacity = 1;
+  clearTimeout(toastT); toastT = setTimeout(() => { t.style.opacity = 0; toastT = setTimeout(hideToast, 300); }, 2600);
+}
+function hideToast() { clearTimeout(toastT); $('#toast').classList.add('hidden'); }
+function regionMsg(hit) {
+  if (hit.kind === 'r') return `${R(hit.r.n)}：${hit.r.m ? R(hit.r.m) + '。' : ''}${R('国[くに]としては 出題[しゅつだい]しないよ')}`;
+  if (hit.kind === 'd') return `${R(hit.d.n)}：${R(hit.d.m)}。${R('答[こた]えには つかわないよ')}`;
+  return '';
+}
+// 国をかこむ範囲（となりの国も少し見えるように）
+function contextBox(c, minW = 130) {
+  if (c.a < 40) minW = Math.max(minW, 2.2 * minW);
+  const b = c.b, w = Math.max(b[2] - b[0], minW), h = Math.max(b[3] - b[1], minW * .55);
+  const cx = (b[0] + b[2]) / 2, cy = (b[1] + b[3]) / 2;
+  return [cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2];
+}
+const unionBox = bs => [Math.min(...bs.map(b => b[0])), Math.min(...bs.map(b => b[1])), Math.max(...bs.map(b => b[2])), Math.max(...bs.map(b => b[3]))];
+
+/* ---------- screens ---------- */
+let curScreen = 'title';
+function show(id) {
+  curScreen = id;
+  $$('.screen').forEach(s => s.classList.toggle('on', s.id === 'scr-' + id));
+  window.scrollTo(0, 0);
+  if (!['quiz', 'zukan'].includes(id)) hideMap();
+  if (id === 'title') renderTitle();
+  if (id === 'weak') renderWeak();
+}
+$('#btn-home').onclick = () => { beep('tap'); show('title'); };
+function syncToggles() { $('#tg-furi').setAttribute('aria-pressed', store.d.furi); $('#tg-sound').setAttribute('aria-pressed', store.d.sound); }
+$('#tg-furi').onclick = () => {
+  store.d.furi = !store.d.furi; store.save(); syncToggles(); renderStatic();
+  if (curScreen === 'quiz' && Q) rerenderQuiz();
+  if (curScreen === 'mode') renderMode();
+  if (curScreen === 'zukan') { renderZList(); if (zSel) zSelect(zSel, false); }
+  if (curScreen === 'weak') renderWeak();
+  if (curScreen === 'result') renderResultList();
+};
+$('#tg-sound').onclick = () => { store.d.sound = !store.d.sound; store.save(); syncToggles(); beep('tap'); };
+syncToggles();
+function renderStatic() {
+  $('#hero-sub').innerHTML = R('国[くに]の 場所[ばしょ]・国旗[こっき]・首都[しゅと]を おぼえよう');
+  $('#lb-zukan').innerHTML = R('国[くに]ずかん');
+  $('#h-area').innerHTML = R('州[しゅう]を しぼる');
+  $('#h-mode').innerHTML = 'モードを えらぼう';
+  $('#h-zukan').innerHTML = R('国[くに]ずかん');
+  $('#h-zarea').innerHTML = R('州[しゅう]で さがす');
+  $('#r-wrong-h').innerHTML = R('まちがえた 国[くに]');
+  $('#weak-desc').innerHTML = R('クイズで まちがえた 国[くに]が たまります。ふくしゅうで 正解[せいかい]すると へっていきます。');
+  $('#credit').innerHTML = `地図：<a href="https://www.naturalearthdata.com/">Natural Earth</a>（パブリックドメイン。日本の視点の版を簡略化）。国旗：<a href="https://github.com/lipis/flag-icons">flag-icons</a>（MIT ライセンス）。国名・首都：外務省「国・地域」の各国の基礎データ（2026年11月に196か国すべてを照合）の表記を優先し、国名はふだん使う呼び名にしたもの（キッズ外務省「世界の国々」も参照）。灰色の地域は国として出題しない地域、しま模様は境界に争いのある地域です。`;
+  renderTitle();
+}
+
+/* title */
+function renderTitle() {
+  const w = weakList().length, c = $('#weak-cnt'); c.textContent = w; c.classList.toggle('hidden', !w);
+  $('#stat').innerHTML = R(`${CS.length}か国[こく]を 収録[しゅうろく]（日本[にほん]が みとめている 195か国[こく]と 日本[にほん]）`);
+}
+(function hero() {
+  const svg = $('#hero-svg');
+  const defs = sv('defs', {}, svg);
+  const clip = sv('clipPath', { id: 'hero-clip' }, defs); sv('circle', { cx: 150, cy: 105, r: 92 }, clip);
+  sv('circle', { cx: 150, cy: 105, r: 98, fill: '#E3F2F9' }, svg);
+  sv('circle', { cx: 150, cy: 105, r: 92, fill: '#8CCBE6' }, svg);
+  const g = sv('g', { 'clip-path': 'url(#hero-clip)' }, svg);
+  const inner = sv('g', {}, g);
+  // 日本のあたりを真ん中に、地図データをそのまま小さくして使う
+  const jp = C.JP.l, sc = 0.42;
+  inner.setAttribute('transform', `translate(${150 - jp[0] * sc},${105 - jp[1] * sc}) scale(${sc})`);
+  CS.forEach(c => sv('path', { d: c.d, fill: c.id === 'JP' ? '#F08A24' : '#9ED27F', stroke: '#6FAF55', 'stroke-width': 1 }, inner));
+  RG.forEach(r => sv('path', { d: r.d, fill: '#C9CFD6' }, inner));
+  for (let i = -3; i <= 3; i++) sv('ellipse', { cx: 150, cy: 105, rx: Math.abs(i) * 30 + .1, ry: 92, fill: 'none', stroke: 'rgba(255,255,255,.35)', 'stroke-width': 1 }, g);
+  [-60, -30, 0, 30, 60].forEach(d => sv('line', { x1: 40, x2: 260, y1: 105 + d, y2: 105 + d, stroke: 'rgba(255,255,255,.35)', 'stroke-width': 1 }, g));
+  sv('circle', { cx: 150, cy: 105, r: 92, fill: 'none', stroke: '#fff', 'stroke-width': 4 }, svg);
+  const pin = sv('g', { transform: 'translate(150,105)' }, svg);
+  sv('circle', { r: 16, fill: 'none', stroke: '#F08A24', 'stroke-width': 3, class: 'hring' }, pin);
+  const ring = pin.firstChild; let t0 = null;
+  const step = now => {
+    if (t0 == null) t0 = now;
+    if (curScreen === 'title') { const p = ((now - t0) / 1600) % 1; ring.setAttribute('r', 8 + p * 22); ring.setAttribute('stroke-opacity', 1 - p); }
+    requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+})();
+$('#btn-play').onclick = () => { beep('tap'); show('mode'); renderMode(); };
+$('#btn-zukan').onclick = () => { beep('tap'); show('zukan'); zukanOpen(); };
+$('#btn-weak').onclick = () => { beep('tap'); show('weak'); };
+
+/* ---------- modes ---------- */
+const MODES = [
+  { key: 'hl', t: '光[ひか]っている国[くに]は？', d: '地図[ちず]で 光[ひか]っている 国[くに]を 4つから えらぶ', ic: '🔦', types: ['hl'], stripe: 'var(--rA)' },
+  { key: 'tap', t: 'この国[くに]は どこ？', d: '地図[ちず]を タップして 国[くに]を さがす', ic: '👆', types: ['tap'], stripe: 'var(--rN)' },
+  { key: 'flag', t: '国旗[こっき]クイズ', d: '国旗[こっき]を 見[み]て 国[くに]を、国[くに]から 国旗[こっき]を えらぶ', ic: '🎌', types: ['f2n', 'n2f'], stripe: 'var(--rE)' },
+  { key: 'cap', t: '首都[しゅと]クイズ', d: '国[くに]の 首都[しゅと]を 4つから えらぶ', ic: '🏛️', types: ['cap'], stripe: 'var(--rS)' },
+  { key: 'reg', t: 'どの州[しゅう]？', d: '国[くに]が ある 州[しゅう]を 6つから えらぶ', ic: '🧭', types: ['reg'], stripe: 'var(--rO)', noArea: true },
+  { key: 'mix', t: 'ミックス', d: 'いろいろな もんだいが まざって 出[で]るよ', ic: '🎲', types: ['hl', 'tap', 'f2n', 'n2f', 'cap', 'reg'], stripe: 'linear-gradient(var(--rA),var(--rE),var(--rF),var(--rN),var(--rS),var(--rO))' },
+];
+const DIFF_NOTE = {
+  1: '有名[ゆうめい]な 国[くに]・大[おお]きな 国[くに] 40か国[こく]から 出[で]るよ。まちがいの 選択肢[せんたくし]も わかりやすいよ。',
+  2: '100か国[こく]くらいから 出[で]るよ。おなじ 州[しゅう]の 国[くに]が 選択肢[せんたくし]に 入[はい]るよ。',
+  3: 'ぜんぶの 国[くに]から 出[で]るよ。となりの 国[くに]や 似[に]ている 国旗[こっき]ばかり！',
+};
+function poolFor(diff, area, mode) {
+  let d = diff, pool;
+  const inArea = c => area === 'all' || mode.noArea || c.r === area || (area === 'A' && c.id === 'RU');
+  const ok = c => (!mode.types.every(t => t === 'cap') || !c.noCap) && (!mode.types.every(t => t === 'reg') || !c.noReg);
+  do { pool = CS.filter(c => c.t <= d && inArea(c) && ok(c)); d++; } while (pool.length < 8 && d <= 3);
+  return pool;
+}
+function renderMode() {
+  $$('#seg-diff button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.d === store.d.diff));
+  $('#diff-note').innerHTML = R(DIFF_NOTE[store.d.diff]);
+  const chips = [{ k: 'all', n: 'ぜんぶ', c: 'var(--navy)' }, ...AREAS];
+  $('#area-chips').innerHTML = chips.map(a => `<button class="chip" data-a="${a.k}" style="--c:${a.c}" aria-pressed="${store.d.area === a.k}">${R(a.n)}</button>`).join('');
+  $$('#area-chips .chip').forEach(b => b.onclick = () => { beep('tap'); store.d.area = b.dataset.a; store.save(); renderMode(); });
+  $('#mode-grid').innerHTML = MODES.map(m => {
+    const best = store.d.best[bestKey(m.key, store.d.diff, m.noArea ? 'all' : store.d.area)];
+    const n = poolFor(store.d.diff, store.d.area, m).length;
+    const areaNote = m.noArea && store.d.area !== 'all' ? '<br>' + R('（州[しゅう]は しぼらずに 出[で]るよ）') : '';
+    return `<button class="course" data-k="${m.key}" style="--stripe:${m.stripe}">
+      ${best != null ? `<span class="best">ベスト ${best}/10</span>` : ''}
+      <span class="t">${R(m.t)}</span><span class="d">${R(m.d)}${areaNote}<br>${R(n + 'か国[こく]から')}</span><span class="ic">${m.ic}</span></button>`;
+  }).join('');
+  $$('#mode-grid .course').forEach(b => b.onclick = () => { beep('tap'); startQuiz(MODES.find(m => m.key === b.dataset.k)); });
+}
+$$('#seg-diff button').forEach(b => b.onclick = () => { beep('tap'); store.d.diff = +b.dataset.d; store.save(); renderMode(); });
+const bestKey = (m, d, a) => `${m}|${d}|${a}`;
+
+/* ---------- question making ---------- */
+const NQ = 10;
+function typeOk(t, c) { return t === 'cap' ? !c.noCap : t === 'reg' ? !c.noReg : true; }
+function pickDistractors(c, n, kind, D) {
+  const out = [], used = new Set([c.id]);
+  const add = list => { for (const x of shuffle(list)) { if (out.length >= n) return; if (used.has(x.id)) continue; if (kind === 'cap' && (x.noCap || x.c === c.c)) continue; if (kind === 'flag' && flagSame.has(c.id) && flagSame.get(c.id).has(x.id)) continue; used.add(x.id); out.push(x); } };
+  const near = CS.filter(x => x !== c).sort((a, b) => ldist(a, c) - ldist(b, c));
+  if (D === 1) {
+    add(CS.filter(x => x.t === 1 && x.r !== c.r));
+    add(CS.filter(x => x.t === 1));
+  } else if (D === 2) {
+    if (kind === 'flag') add([...(flagSim.get(c.id) || [])].map(i => C[i]).filter(x => x.t <= 2).slice(0, 1));
+    add(CS.filter(x => x.t <= 2 && x.r === c.r));
+    add(near.slice(0, 14));
+  } else {
+    if (kind === 'flag') add([...(flagSim.get(c.id) || [])].map(i => C[i]));
+    add(c.nb.map(i => C[i]));
+    add(near.slice(0, 8));
+    add(near.slice(0, 20));
+  }
+  add(CS);
+  return out.slice(0, n);
+}
+function makeItem(type, c, D) {
+  if (type === 'reg') return { type, c, choices: shuffle(AREAS.map(a => a.k)), ans: c.r };
+  if (type === 'tap') return { type, c, ans: c.id };
+  const kind = type === 'cap' ? 'cap' : (type === 'f2n' || type === 'n2f') ? 'flag' : 'loc';
+  const ds = pickDistractors(c, 3, kind, D);
+  return { type, c, choices: shuffle([c, ...ds]).map(x => x.id), ans: c.id };
+}
+let Q = null;
+function startQuiz(mode, weights) {
+  const D = store.d.diff, area = mode.noArea ? 'all' : store.d.area;
+  const pool = mode.pool || poolFor(D, area, mode);
+  const items = [], usedC = new Set();
+  const nq = mode.key === 'weak' ? Math.min(NQ, Math.max(5, pool.length)) : NQ;
+  let guard = 0;
+  while (items.length < nq && guard++ < 500) {
+    let c;
+    if (weights) { const tot = pool.reduce((s, x) => s + (weights[x.id] || 1), 0); let r = Math.random() * tot; c = pool.find(x => (r -= (weights[x.id] || 1)) < 0) || pool[0]; }
+    else c = pool[rnd(pool.length)];
+    if (usedC.has(c.id) && usedC.size < pool.length) continue;
+    const types = mode.types.filter(t => typeOk(t, c));
+    if (!types.length) continue;
+    usedC.add(c.id);
+    items.push(makeItem(types[rnd(types.length)], c, D));
+  }
+  Q = { mode, D, area, items, i: 0, score: 0, wrong: [], weights };
+  show('quiz'); nextQuestion();
+}
+const TAGS = { hl: '光[ひか]っている国[くに]', tap: '国[くに]はどこ？', f2n: '国旗[こっき]→国[くに]', n2f: '国[くに]→国旗[こっき]', cap: '首都[しゅと]', reg: '州[しゅう]' };
+function nextQuestion() {
+  if (Q.i >= Q.items.length) return finish();
+  Q.cur = Q.items[Q.i]; Q.answered = false; Q.sel = null;
+  $('#q-no').textContent = `${Q.i + 1} / ${Q.items.length}`;
+  $('#q-bar').style.width = (Q.i / Q.items.length * 100) + '%';
+  $('#q-score').textContent = `⭕ ${Q.score}`;
+  $('#q-fb').classList.add('hidden');
+  renderQuestion(true);
+}
+function rerenderQuiz() {
+  if (!Q || !Q.cur) return;
+  renderQuestion(false);
+  if (Q.answered) renderFeedback(false);
+}
+function choiceHtml(it, v) {
+  if (it.type === 'reg') return `<span class="sw" style="--c:${AR[v].c}"></span>${R(AR[v].n)}`;
+  const c = C[v];
+  if (it.type === 'n2f') return `<img src="${flagSrc(c)}" alt="国旗の選択肢" draggable="false">`;
+  if (it.type === 'cap') return R(c.c);
+  return R(c.n);
+}
+function renderQuestion(fresh) {
+  const it = Q.cur, c = it.c;
+  $('#q-tag').innerHTML = R(TAGS[it.type]);
+  const hint = Q.D === 1 && it.type === 'tap' && !c.noReg ? `<br><span class="hint">ヒント：${R(AR[c.r].n)}</span>` : '';
+  const T = {
+    hl: R('地図[ちず]で 光[ひか]っている 国[くに]は どれ？'),
+    tap: `<span class="big">${R(c.n)}</span> は どこ？${hint}`,
+    f2n: R('この 国旗[こっき]は どの 国[くに]？'),
+    n2f: `<span class="big">${R(c.n)}</span> の ${R('国旗[こっき]は どれ？')}`,
+    cap: `<span class="big">${R(c.n)}</span> の ${R('首都[しゅと]は どこ？')}`,
+    reg: `<span class="big">${R(c.n)}</span> は ${R('どの 州[しゅう]に ある？')}`,
+  };
+  $('#q-text').innerHTML = T[it.type];
+  $('#q-body').innerHTML = it.type === 'f2n' ? `<img class="qflag" src="${flagSrc(c)}" alt="国旗" draggable="false">` : it.type === 'reg' || it.type === 'cap' ? `<div style="margin-top:8px">${flagImg(c)}</div>` : '';
+  // 選択肢
+  const box = $('#q-choices');
+  if (it.type === 'tap') { box.innerHTML = ''; box.classList.add('hidden'); }
+  else {
+    box.classList.remove('hidden'); box.classList.toggle('six', it.type === 'reg');
+    box.innerHTML = it.choices.map(v => `<button class="choice${it.type === 'n2f' ? ' flagc' : ''}" data-v="${v}">${choiceHtml(it, v)}</button>`).join('');
+    $$('.choice', box).forEach(b => b.onclick = () => answer(b.dataset.v));
+    if (Q.answered) markChoices();
+  }
+  // 地図
+  const needMap = it.type === 'hl' || it.type === 'tap';
+  $('#q-tapbar').classList.toggle('hidden', it.type !== 'tap' || Q.answered);
+  if (!needMap) { if (fresh) { hideMap(); } return; }
+  if (!fresh) return;
+  if (it.type === 'hl') {
+    const m = placeMap($('#q-mapslot'), { hint: 'ドラッグで うごかす・つまんで ズーム' });
+    m.mark(c.id, 'hi'); m.rings = [{ id: c.id }];
+    const view = m.boxView(contextBox(c, Q.D === 3 ? 110 : 160), .15);
+    m.setView(view);
+  } else {
+    const m = placeMap($('#q-mapslot'), { hint: 'タップで えらぶ・つまんで ズーム', onTap: onQuizTap });
+    if (Q.area !== 'all') m.setDim(x => x.r === Q.area || (Q.area === 'A' && x.id === 'RU'));
+    let b;
+    if (c.id === 'RU') b = [0, 0, W, H];
+    else b = AREA_BOX[Q.area !== 'all' ? Q.area : c.r];
+    // むずかしいでは、まわりの州も入るように広めに見せる
+    m.setView(m.boxView(b, Q.D === 3 && Q.area === 'all' ? .3 : .04));
+    $('#btn-tapok').disabled = true;
+    $('#q-tapmsg').innerHTML = R('地図[ちず]の 国[くに]を タップしてね');
+  }
+}
+function onQuizTap(hit) {
+  if (!Q || Q.answered || Q.cur.type !== 'tap') return;
+  if (hit.kind === 'c') {
+    beep('tap');
+    if (Q.sel) { map.mark(Q.sel, null); }
+    Q.sel = hit.c.id; map.mark(Q.sel, 'sel'); map.rings = [{ id: Q.sel }]; map.commit();
+    $('#btn-tapok').disabled = false;
+    $('#q-tapmsg').innerHTML = R('オレンジの 国[くに]で よければ「ここにする！」');
+  } else if (hit.kind === 'r' || hit.kind === 'd') toast(regionMsg(hit));
+  else toast(R('海[うみ]だよ。国[くに]を タップしてね'));
+}
+$('#btn-tapok').onclick = () => { if (Q && Q.sel) answer(Q.sel); };
+function answer(v) {
+  if (Q.answered) return;
+  const it = Q.cur; Q.answered = true; Q.pick = v;
+  const ok = v === it.ans; it.ok = ok;
+  if (ok) { Q.score++; beep('ok'); if (store.d.weak[it.c.id]) store.d.weak[it.c.id]--; }
+  else { beep('ng'); Q.wrong.push(it.c.id); store.d.weak[it.c.id] = (store.d.weak[it.c.id] || 0) + 1; }
+  store.save();
+  $('#q-score').textContent = `⭕ ${Q.score}`;
+  $('#btn-tapok').disabled = true;
+  markChoices();
+  renderFeedback(true);
+}
+function markChoices() {
+  const it = Q.cur;
+  $$('#q-choices .choice').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.v === it.ans) b.classList.add('ok');
+    else if (b.dataset.v === Q.pick) b.classList.add('ng');
+    else b.classList.add('dim');
+  });
+}
+function renderFeedback(fresh) {
+  const it = Q.cur, c = it.c, ok = it.ok;
+  const fb = $('#q-fb'); fb.classList.remove('hidden'); fb.classList.toggle('ng', !ok);
+  $('#fb-res').textContent = ok ? '⭕ せいかい！' : '❌ ざんねん…';
+  let pre = '';
+  if (!ok && it.type !== 'reg' && C[Q.pick]) {
+    const p = C[Q.pick];
+    const what = it.type === 'cap' ? `${R(p.c)} は ${R(p.n)} の ${R('首都[しゅと]')}だよ。` : it.type === 'n2f' ? `えらんだのは ${R(p.n)} の ${R('国旗[こっき]')}だよ。` : it.type === 'tap' ? `えらんだのは ${R(p.n)} だよ。` : '';
+    if (what) pre = `<p style="margin:0 0 8px;font-weight:700">${what}</p>`;
+  }
+  const notes = it.type === 'cap' ? ['首都', 'etc'] : it.type === 'reg' ? ['州', 'etc'] : ['etc'];
+  $('#fb-exp').innerHTML = pre + countryCard(c, { notes, info: 'short' });
+  if (!fresh) return;
+  // 地図で場所をたしかめる。正解（緑）・えらんだ国（赤）・ほかの選択肢（青）に名前を出し、ほかの国もタップで名前が見られる
+  const hasAlt = it.choices && it.type !== 'reg';
+  const legend = '<span style="color:#1F9D63">■</span>' + R('正解[せいかい]') + (it.ok ? '' : ' <span style="color:#E0484B">■</span>えらんだ' + R('国[くに]')) + (hasAlt ? ' <span style="color:#5B8DEF">■</span>ほかの' + R('選択肢[せんたくし]') : '') + '<br>' + R('国[くに]を タップすると 名前[なまえ]が 出[で]るよ');
+  const m = placeMap(it.type === 'tap' ? $('#q-mapslot') : $('#fb-mapslot'), { hintHtml: legend, labels: 'auto', onTap: onFeedbackTap });
+  const lab = (id, cls) => { m.labelSet.add(id); m.labelCls[id] = cls; };
+  m.mark(c.id, 'ok'); m.rings = [{ id: c.id, cls: 'ok' }]; lab(c.id, 'ok');
+  const boxes = [contextBox(c, 150)];
+  const picked = it.type !== 'reg' && C[Q.pick] && Q.pick !== c.id ? C[Q.pick] : null;
+  if (picked) { m.mark(picked.id, 'ng'); m.rings.push({ id: picked.id, cls: 'ng' }); lab(picked.id, 'ng'); boxes.push(contextBox(picked, 60)); }
+  if (hasAlt) it.choices.filter(id => id !== c.id && id !== Q.pick).forEach(id => {
+    m.mark(id, 'alt'); lab(id, 'alt'); boxes.push(contextBox(C[id], 60));
+  });
+  Q.peek = null;
+  if (it.type === 'tap') { m.fly(m.boxView(unionBox(boxes), .12)); }
+  else m.setView(m.boxView(unionBox(boxes), .12));
+  if (it.type === 'tap') $('#q-tapbar').classList.add('hidden');
+  setTimeout(() => fb.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+}
+function onFeedbackTap(hit) {
+  if (hit.kind === 'c') {
+    beep('tap'); const c = hit.c;
+    if (Q.peek && Q.peek !== c.id && map.state[Q.peek] === 'peek') { map.mark(Q.peek, null); map.labelSet.delete(Q.peek); }
+    if (!map.state[c.id]) { map.mark(c.id, 'peek'); map.labelSet.add(c.id); map.labelCls[c.id] = 'peek'; Q.peek = c.id; }
+    map.commit();
+    toast(`${R(c.n)}（${R('首都[しゅと]')}：${c.c ? R(c.c) : 'なし'}）`);
+  } else if (hit.kind === 'r' || hit.kind === 'd') toast(regionMsg(hit));
+}
+$('#btn-next').onclick = () => { beep('tap'); Q.i++; nextQuestion(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+function finish() {
+  hideMap();
+  const sc = Q.score, n = Q.items.length;
+  let bestTxt = '';
+  if (Q.mode.key !== 'weak') {
+    const key = bestKey(Q.mode.key, Q.D, Q.area), prev = store.d.best[key];
+    if (prev == null || sc > prev) { store.d.best[key] = sc; if (prev != null) bestTxt = '🎉 ' + R('ベスト記録[きろく] こうしん！'); }
+    else bestTxt = `ベスト ${prev} / ${NQ}`;
+    store.save();
+  }
+  const stars = sc >= n ? 3 : sc >= n * .7 ? 2 : sc >= n * .4 ? 1 : 0;
+  $('#r-stars').textContent = '★'.repeat(stars) + '☆'.repeat(3 - stars);
+  $('#r-score').innerHTML = `${sc}<small> / ${n}</small>`;
+  $('#r-msg').innerHTML = R(sc === n ? 'ぜんもん 正解[せいかい]！ せかいちずマスターだ！' : sc >= n * .7 ? 'よくできました！' : sc >= n * .4 ? 'そのちょうし！' : 'にがてリストで ふくしゅうしよう！');
+  $('#r-best').innerHTML = bestTxt;
+  renderResultList();
+  show('result'); beep(sc >= n * .7 ? 'fan' : 'tap');
+}
+function renderResultList() {
+  if (!Q) return;
+  const uniq = [...new Set(Q.wrong)];
+  $('#r-wrong-h').classList.toggle('hidden', !uniq.length);
+  $('#r-wrong').innerHTML = uniq.map(i => `<li>${flagImg(C[i])}<span class="nm">${R(C[i].n)}</span><span class="sub">${R('首都[しゅと]')}：${C[i].c ? R(C[i].c) : 'なし'}</span></li>`).join('');
+}
+$('#btn-retry').onclick = () => { beep('tap'); if (Q.mode.key === 'weak') return startWeak(); startQuiz(Q.mode); };
+$('#btn-mode2').onclick = () => { beep('tap'); show('mode'); renderMode(); };
+$('#btn-title2').onclick = () => { beep('tap'); show('title'); };
+
+/* ---------- weak ---------- */
+function renderWeak() {
+  const w = weakList();
+  $('#weak-list').innerHTML = w.length ? w.map(o => `<li>${flagImg(o.c)}<span class="nm">${R(o.c.n)}</span><span class="sub">${R('首都[しゅと]')}：${o.c.c ? R(o.c.c) : 'なし'}</span><span class="times">×${o.n}</span></li>`).join('') : '<li class="empty" style="display:block">まだありません。クイズであそんでみよう！</li>';
+  $('#btn-weak-play').disabled = !w.length; $('#btn-weak-clear').disabled = !w.length;
+}
+function startWeak() {
+  const w = weakList(); if (!w.length) return show('weak');
+  const mode = { key: 'weak', t: 'にがて', types: ['hl', 'tap', 'f2n', 'n2f', 'cap', 'reg'], pool: w.map(o => o.c) };
+  startQuiz(mode, Object.fromEntries(w.map(o => [o.c.id, o.n + 1])));
+}
+$('#btn-weak-play').onclick = () => { beep('tap'); startWeak(); };
+$('#btn-weak-clear').onclick = () => {
+  const m = document.createElement('div'); m.className = 'modal';
+  m.innerHTML = `<div class="box">にがてリストをぜんぶけしますか？<div class="row"><button class="btn ghost" data-a="n">やめる</button><button class="btn orange" data-a="y">けす</button></div></div>`;
+  m.onclick = e => { const a = e.target.dataset.a; if (a === 'y') { store.d.weak = {}; store.save(); renderWeak(); } if (a || e.target === m) m.remove(); };
+  document.body.appendChild(m);
+};
+
+/* ---------- zukan ---------- */
+let zArea = 'all', zSel = null;
+function zukanOpen() {
+  const m = placeMap($('#z-mapslot'), { mode: 'zukan', tall: true, labels: 'auto', hint: '国[くに]を タップすると くわしく 出[で]るよ', onTap: onZukanTap });
+  zSel = null; $('#z-info').classList.add('hidden');
+  const chips = [{ k: 'all', n: 'ぜんぶ', c: 'var(--navy)' }, ...AREAS];
+  $('#z-chips').innerHTML = chips.map(a => `<button class="chip" data-a="${a.k}" style="--c:${a.c}" aria-pressed="${zArea === a.k}">${R(a.n)}</button>`).join('');
+  $$('#z-chips .chip').forEach(b => b.onclick = () => { beep('tap'); zSetArea(b.dataset.a); });
+  requestAnimationFrame(() => { zApplyArea(false); });
+  renderZList();
+}
+function zSetArea(a) { zArea = a; $$('#z-chips .chip').forEach(c => c.setAttribute('aria-pressed', c.dataset.a === a)); zApplyArea(true); renderZList(); }
+function zApplyArea(fly) {
+  map.setDim(zArea === 'all' ? null : x => x.r === zArea);
+  const v = zArea === 'all' ? map.worldBox() : map.boxView(AREA_BOX[zArea], .04);
+  if (fly) map.fly(v); else map.setView(v);
+}
+function renderZList() {
+  const list = AREAS.filter(a => zArea === 'all' || a.k === zArea).map(a => {
+    const cs = CS.filter(c => c.r === a.k).sort((x, y) => yomi(x).localeCompare(yomi(y), 'ja'));
+    return `<div class="zk-h" style="--c:${a.c}"><i></i>${R(a.n)}<span style="color:var(--sub);font-size:12px">${R(cs.length + 'か国[こく]')}</span></div><div class="zk-grid">${cs.map(c => `<button data-id="${c.id}" aria-current="${zSel === c.id}">${flagImg(c)}<span>${R(c.n)}</span></button>`).join('')}</div>`;
+  }).join('');
+  $('#z-list').innerHTML = list;
+  $$('#z-list button[data-id]').forEach(b => b.onclick = () => { beep('tap'); zSelect(b.dataset.id, true); $('#mapwrap').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+}
+function onZukanTap(hit) {
+  if (hit.kind === 'c') { beep('tap'); zSelect(hit.c.id, false); }
+  else if (hit.kind === 'r' || hit.kind === 'd') { beep('tap'); zSelect(null); zShowOther(hit); }
+  else zSelect(null);
+}
+function zShowOther(hit) {
+  const box = $('#z-info'); box.style.setProperty('--c', '#A9B0BA');
+  box.innerHTML = `<button class="x" aria-label="とじる">×</button><div class="cc"><div><div class="nm" style="font-size:20px">${R(hit.kind === 'r' ? hit.r.n : hit.d.n)}</div></div></div><div class="note">${hit.kind === 'r' ? (hit.r.m ? R(hit.r.m) + '。' : '') + R('国[くに]としては 出題[しゅつだい]しない 地域[ちいき]だよ（地図[ちず]では 灰色[はいいろ]）') : R(hit.d.m) + '。' + R('しま模様[もよう]で かいていて、答[こた]えには つかわないよ')}</div>`;
+  box.classList.remove('hidden'); box.querySelector('.x').onclick = () => box.classList.add('hidden');
+}
+function zSelect(id, fly) {
+  if (zSel && map.state[zSel]) map.mark(zSel, null);
+  map.rings = []; map.labelSet = new Set(); map.labelCls = {};
+  zSel = id; const box = $('#z-info');
+  $$('#z-list button[data-id]').forEach(b => b.setAttribute('aria-current', b.dataset.id === id));
+  if (!id) { box.classList.add('hidden'); map.commit(); return; }
+  const c = C[id];
+  map.mark(id, 'hi'); map.rings = [{ id }]; map.labelSet.add(id);
+  box.style.setProperty('--c', AR[c.r].c);
+  box.innerHTML = `<button class="x" aria-label="とじる">×</button>${countryCard(c, { nb: true, info: 'full' })}`;
+  box.classList.remove('hidden');
+  box.querySelector('.x').onclick = e => { e.stopPropagation(); zSelect(null); };
+  $$('[data-go]', box).forEach(b => b.onclick = () => { beep('tap'); zSelect(b.dataset.go, true); });
+  if (fly) map.fly(map.boxView(contextBox(c, 120), .2), false); else map.commit();
+}
+
+renderStatic();
+</script>
+</body>
+</html>

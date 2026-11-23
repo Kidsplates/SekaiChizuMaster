@@ -1,0 +1,29 @@
+# 似ている国旗のグループ（むずかしいの国旗クイズで、まちがいの選択肢に使う）。1行が1グループ
+ID MC PL SG
+RO TD AD MD
+FR IT IE CI BE
+GN ML SN CM
+NL LU RU SI SK RS HR PY
+DE BE
+HU BG LT GA SL EE
+SE NO DK FI IS
+AU NZ TV FJ CK NU GB
+US LR MY
+UY GR AR
+EG SY IQ YE SD JO AE KW
+GH GN ML SN CM ET BJ TG BF GW
+JP BD PW LA
+TR TN DZ PK MR LY AZ
+AR UY HN NI SV GT
+CO EC VE
+CN VN
+CL CU CZ PH
+CH TO DK GE
+UA KZ PW SE
+QA BH
+KN TT
+NE IN CI IE
+IT MX
+# 「=」で始まる行は、この絵ではほとんど同じに見える国旗。おたがいを選択肢に入れない
+= ID MC
+= RO TD

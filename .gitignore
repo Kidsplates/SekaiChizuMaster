@@ -1,0 +1,4 @@
+shots/
+work/
+__pycache__/
+*.geojson
